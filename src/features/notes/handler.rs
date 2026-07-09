@@ -58,9 +58,7 @@ pub async fn delete_note_handler(
 pub async fn read_specific_note_handler(
     State(state): State<AppState>,
     Path(note_id): Path<i32>,
-) -> impl IntoResponse {
-    match note_service::note_find_by_id(&state.db_pool, note_id).await {
-        Ok(note) => (StatusCode::OK, Json(note)).into_response(),
-        Err(_) => (StatusCode::NOT_FOUND, "Failed to find Note").into_response(),
-    }
+) -> Result<impl IntoResponse, AppError> {
+    let note = note_service::note_find_by_id(&state.db_pool, note_id).await?;
+    Ok((StatusCode::OK, Json(note)))
 }

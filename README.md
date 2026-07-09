@@ -14,12 +14,16 @@ A RESTful API server built with [Axum](https://github.com/tokio-rs/axum) and [SQ
 
 | Technology | Purpose |
 |---|---|
-| [Axum](https://github.com/tokio-rs/axum) 0.7 | HTTP framework |
-| [SQLx](https://github.com/launchbadge/sqlx) 0.8 | Async PostgreSQL driver & migrations |
-| [jsonwebtoken](https://github.com/Keats/jsonwebtoken) 9.3 | JWT creation & verification |
-| [bcrypt](https://github.com/Keats/bcrypt) 0.15 | Password hashing |
-| [Tokio](https://github.com/tokio-rs/tokio) 1.49 | Async runtime |
-| [Serde](https://github.com/serde-rs/serde) | JSON serialization/deserialization |
+| [Axum](https://github.com/tokio-rs/axum) 0.8.9 | HTTP framework |
+| [SQLx](https://github.com/launchbadge/sqlx) 0.9.0 | Async PostgreSQL driver & migrations |
+| [jsonwebtoken](https://github.com/Keats/jsonwebtoken) 10.4.0 | JWT creation & verification |
+| [bcrypt](https://github.com/Keats/bcrypt) 0.17.0 | Password hashing |
+| [Tokio](https://github.com/tokio-rs/tokio) 1.47.1 | Async runtime |
+| [Serde](https://github.com/serde-rs/serde) 1.0 | JSON serialization/deserialization |
+| [uuid](https://github.com/uuid-rs/uuid) 1.18 | UUID generation |
+| [chrono](https://github.com/chronotope/chrono) 0.4 | Date & time handling |
+| [thiserror](https://github.com/dtolnay/thiserror) 2.0 | Ergonomic error types |
+| [dotenvy](https://github.com/allan2/dotenvy) 0.15 | `.env` file loading |
 | [PostgreSQL](https://www.postgresql.org/) | Database |
 
 ## Project Structure
@@ -95,8 +99,8 @@ The server starts at `http://127.0.0.1:3000`.
 | Method | Path | Description |
 |---|---|---|
 | `GET` | `/` | Health check — returns `Hello world!` |
-| `POST` | `/auth/register` | Register a new user |
-| `POST` | `/auth/login` | Login and receive a JWT |
+| `POST` | `/auth/register` | Register a new user — returns a JWT on success (201) |
+| `POST` | `/auth/login` | Login and receive a JWT (200) |
 
 ### Protected Routes (requires `Authorization: Bearer <token>` header)
 
@@ -119,6 +123,12 @@ curl -X POST http://localhost:3000/auth/register \
   -d '{"email": "user@example.com", "password": "securepass123"}'
 ```
 
+Response (201 Created): a JWT token string.
+
+```
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+```
+
 **Login**
 
 ```bash
@@ -127,7 +137,11 @@ curl -X POST http://localhost:3000/auth/login \
   -d '{"email": "user@example.com", "password": "securepass123"}'
 ```
 
-Response: a JWT token string.
+Response (200 OK): a JWT token string.
+
+```
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+```
 
 **Create a Note**
 
@@ -161,7 +175,7 @@ Errors are centralized in [`AppError`](src/core/error.rs:8) and mapped to approp
 | Error Variant | HTTP Status |
 |---|---|
 | `NotFound` | 404 |
-| `Conflict` | 400 |
+| `Conflict` | 409 |
 | `Database` | 500 |
 | `HashFailure` | 500 |
 | `Unauthorized` | 401 |

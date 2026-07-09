@@ -4,16 +4,22 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-axum = "0.7.5"
-axum-extra = {version = "0.12.5", features = ["typed-header"]}
-bcrypt = "0.15.1"
-chrono = { version = "0.4.34", features = ["serde"] }
+axum = "0.8.9"
+axum-extra = { version = "0.12.5", features = ["typed-header"] }
+bcrypt = "0.17.0"
+chrono = { version = "0.4.42", features = ["serde"] }
 dotenvy = "0.15.7"
-jsonwebtoken = "9.3.0"
-serde = { version = "1.0.195", features = ["derive"] }
-serde_json = "1.0.95"
-sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "sqlite"] }
-thiserror = "2.0.18"
-tokio = { version = "1.49.0", features = ["full"] }
-uuid = "1.21.0"
-
+jsonwebtoken = { version = "10.4.0", features = ["rust_crypto"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.143"
+sqlx = { version = "0.9.0", features = [
+    "postgres",
+    "runtime-tokio",
+    "tls-rustls",
+    "uuid",
+    "chrono",
+    "sqlite",
+] }
+thiserror = "2.0.17"
+tokio = { version = "1.47.1", features = ["full"] }
+uuid = { version = "1.18.1", features = ["serde", "v4"] }

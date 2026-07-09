@@ -25,7 +25,7 @@ pub enum AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         match self {
-            AppError::NotFound => (StatusCode::NOT_FOUND, "User not found").into_response(),
+            AppError::NotFound => (StatusCode::NOT_FOUND, "Not found").into_response(),
 
             AppError::Conflict => (StatusCode::BAD_REQUEST, "User already exists").into_response(),
 
