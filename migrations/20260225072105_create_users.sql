@@ -1,5 +1,3 @@
--- Add migration script here
-
 -- Users table
 CREATE TABLE IF NOT EXISTS users  (
     id SERIAL PRIMARY KEY,

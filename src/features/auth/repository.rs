@@ -1,9 +1,9 @@
-use crate::features::auth::model::User;
+use crate::features::auth::{dto::UserResponse, model::User};
 use sqlx::PgPool;
 
 // insert
-pub async fn create(pool: &PgPool, email: &str, password_hash: &str) -> Result<User, sqlx::Error> {
-    sqlx::query_as::<_, User>(
+pub async fn create(pool: &PgPool, email: &str, password_hash: &str) -> Result<UserResponse, sqlx::Error> {
+    let user = sqlx::query_as::<_, User>(
         r#"
         INSERT INTO users (email, password)
         VALUES ($1, $2)
@@ -13,17 +13,28 @@ pub async fn create(pool: &PgPool, email: &str, password_hash: &str) -> Result<U
     .bind(email)
     .bind(password_hash)
     .fetch_one(pool)
-    .await
+    .await?;
+
+    Ok(user.into())
 }
 
 // find by email
-pub async fn find_user_by_email(pool: &PgPool, email: &str) -> Result<User, sqlx::Error> {
+pub async fn _find_user_by_email(pool: &PgPool, email: &str) -> Result<UserResponse, sqlx::Error> {
+    let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = $1")
+        .bind(email)
+        .fetch_one(pool)
+        .await?;
+
+    Ok(user.into())
+}
+
+//Return User & Password for Auth
+pub async fn return_user_details(pool: &PgPool, email: &str) -> Result<User, sqlx::Error>{
     sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = $1")
         .bind(email)
         .fetch_one(pool)
         .await
 }
-
 // update
 
 // delete
