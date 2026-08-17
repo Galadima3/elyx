@@ -29,12 +29,15 @@ pub enum AppError {
 
     #[error("Invalid or expired Token")]
     InvalidToken,
+
+    #[error("Refresh token reuse detected")]
+    TokenReused,
 }
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         match self {
-            AppError::NotFound => (StatusCode::NOT_FOUND, "Not found").into_response(),
+            AppError::NotFound => (StatusCode::NOT_FOUND, "User not found").into_response(),
 
             AppError::Conflict => (StatusCode::CONFLICT, "User already exists").into_response(),
 
@@ -44,6 +47,10 @@ impl IntoResponse for AppError {
 
             AppError::Unauthorized | AppError::InvalidToken => {
                 (StatusCode::UNAUTHORIZED, "Unauthorized").into_response()
+            }
+
+            AppError::TokenReused => {
+                (StatusCode::UNAUTHORIZED, "Session revoked, please log in again").into_response()
             }
 
             AppError::TokenCreation => (
@@ -60,4 +67,3 @@ impl IntoResponse for AppError {
         }
     }
 }
-

@@ -1,10 +1,12 @@
-use chrono::{Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use crate::core::error::AppError;
 
 pub fn create_token(user_id: i32, secret: &str) -> Result<String, AppError> {
+    //Fix the expiration time from 24 hours => 30 ?? 10 minutes
     let expiration = Utc::now() + Duration::hours(24);
     let now = Utc::now();
 
@@ -41,4 +43,18 @@ pub struct Claims {
     pub exp: i64, // Expiry time of the token
     pub iat: i64, // Issued at time of the token
     pub sub: i32, // subject (user identifier, e.g. email)
+}
+
+
+
+#[derive(Debug, Clone, sqlx::FromRow)]
+#[allow(dead_code)]
+pub struct RefreshToken {
+    pub id: Uuid,
+    pub user_id: i32,
+    pub family_id: Uuid,
+    pub token_hash: String,
+    pub expires_at: DateTime<Utc>,
+    pub revoked: bool,
+    pub created_at: DateTime<Utc>
 }

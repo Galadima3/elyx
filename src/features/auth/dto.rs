@@ -11,6 +11,14 @@ pub struct RegistrationRequest {
     pub password: String,
 }
 
+#[derive(Deserialize, Serialize, Validate)]
+pub struct LoginRequest {
+    #[validate(email(message = "Invalid Email format"))]
+    pub email: String,
+    #[validate(length(min = 6, message = "Password must be more than 6 characters"))]
+    pub password: String,
+}
+
 #[derive(Deserialize)]
 pub struct UserResponse {
     pub email: String,
@@ -24,4 +32,17 @@ impl From<User> for UserResponse {
             id: user.id,
         }
     }
+}
+
+
+
+#[derive(Deserialize)]
+pub struct RefreshRequest {
+    pub refresh_token: String,
+}
+
+#[derive(Serialize)]
+pub struct TokenResponse {
+    pub access_token: String,
+    pub refresh_token: String,
 }
