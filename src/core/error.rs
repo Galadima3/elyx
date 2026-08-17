@@ -61,8 +61,3 @@ impl IntoResponse for AppError {
     }
 }
 
-// impl From<jsonwebtoken::errors::Error> for AppError {
-//     fn from(_: jsonwebtoken::errors::Error) -> Self {
-//         AppError::Unauthorized
-//     }
-// }
